@@ -17,6 +17,6 @@ const verificarParImparArrow = (numero) => {
     }
 };
 
-//LLAMADAS A LAS FUNCIONES
+//LLAMADAS A LAS FUNCIONE
 verificarParImpar(7);
 verificarParImparArrow(10);
