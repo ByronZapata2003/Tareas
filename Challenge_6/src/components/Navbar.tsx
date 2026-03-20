@@ -17,7 +17,7 @@ export default function Navbar() {
         <Link to="/queue" style={linkStyle}>ATM Queue</Link>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        <span style={{ color: "white", fontSize: "14px" }}>👤 {user}</span>
+        <span style={{ color: "white", fontSize: "14px" }}>{user}</span>
         <button onClick={handleLogout} style={btnStyle}>Logout</button>
       </div>
     </div>
