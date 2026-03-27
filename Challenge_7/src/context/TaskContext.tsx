@@ -2,6 +2,8 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useTasks } from "../hooks/useTasks";
 import type { Task } from "../hooks/useTasks";
 import { useAuth } from "./AuthContext";
+import { collection, onSnapshot, query, where } from "firebase/firestore"; // Agrega estos imports
+import { db } from "../firebase/config"; // Asume que config.ts exporta db
 
 interface TaskContextType {
   tasks: Task[];
@@ -17,43 +19,43 @@ const TaskContext = createContext<TaskContextType | null>(null);
 export function TaskProvider({ children }: { children: React.ReactNode }) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(false);
-  const { getAll, add, update, remove } = useTasks();
+  const { add, update, remove } = useTasks(); // Remueve getAll, ya no se usa
   const { user } = useAuth();
 
-  const fetchTasks = async () => {
-    if (!user) return;
-    setLoading(true);
-    try {
-      const data = await getAll(user.uid);
-      setTasks(data);
-    } catch (error) {
-      console.error("Error fetching tasks:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchTasks();
+    if (!user) {
+      setTasks([]);
+      return;
+    }
+
+    setLoading(true);
+    const q = query(collection(db, "tasks"), where("userId", "==", user.uid));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const tasksData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Task));
+      setTasks(tasksData);
+      setLoading(false);
+    }, (error) => {
+      console.error("Error listening to tasks:", error);
+      setLoading(false);
+    });
+
+    return unsubscribe; // Limpia el listener al desmontar o cambiar usuario
   }, [user]);
 
   const addTask = async (title: string) => {
     if (!user) return;
-    const tempId = `temp-${Date.now()}`; // ID temporal único
+    const tempId = `temp-${Date.now()}`;
     const newTask: Task = { id: tempId, title, done: false, userId: user.uid };
     
-    // Actualiza UI inmediatamente (optimista)
-    setTasks(prev => [...prev, newTask]);
+    setTasks(prev => [...prev, newTask]); // Optimista
     
     try {
       await add({ title, done: false, userId: user.uid });
-      // Refresca para obtener ID real de Firebase (opcional, si no usas listeners)
-      await fetchTasks();
+      // El listener actualizará automáticamente con el ID real
     } catch (error) {
-      // Revierte si falla
       setTasks(prev => prev.filter(t => t.id !== tempId));
       console.error("Error adding task:", error);
-      throw error; // Opcional: para manejar en UI
+      throw error;
     }
   };
 
@@ -61,13 +63,11 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
     const originalTask = tasks.find(t => t.id === id);
     if (!originalTask) return;
     
-    // Actualiza UI inmediatamente
-    setTasks(prev => prev.map(t => t.id === id ? { ...t, title } : t));
+    setTasks(prev => prev.map(t => t.id === id ? { ...t, title } : t)); // Optimista
     
     try {
       await update(id, { title });
     } catch (error) {
-      // Revierte si falla
       setTasks(prev => prev.map(t => t.id === id ? originalTask : t));
       console.error("Error updating task:", error);
       throw error;
@@ -78,13 +78,11 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
     const originalTask = tasks.find(t => t.id === id);
     if (!originalTask) return;
     
-    // Actualiza UI inmediatamente
-    setTasks(prev => prev.map(t => t.id === id ? { ...t, done } : t));
+    setTasks(prev => prev.map(t => t.id === id ? { ...t, done } : t)); // Optimista
     
     try {
       await update(id, { done });
     } catch (error) {
-      // Revierte si falla
       setTasks(prev => prev.map(t => t.id === id ? originalTask : t));
       console.error("Error toggling task:", error);
       throw error;
@@ -95,13 +93,11 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
     const taskToRemove = tasks.find(t => t.id === id);
     if (!taskToRemove) return;
     
-    // Remueve de UI inmediatamente
-    setTasks(prev => prev.filter(t => t.id !== id));
+    setTasks(prev => prev.filter(t => t.id !== id)); // Optimista
     
     try {
       await remove(id);
     } catch (error) {
-      // Agrega de vuelta si falla
       setTasks(prev => [...prev, taskToRemove]);
       console.error("Error removing task:", error);
       throw error;

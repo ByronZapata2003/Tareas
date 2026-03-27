@@ -1,19 +1,24 @@
 import { useState } from "react";
 import { useTaskContext } from "../context/TaskContext";
+import { Container, Form, Button, ListGroup, Spinner, Alert } from "react-bootstrap";
 import Navbar from "../components/Navbar";
-import { Container, Form, Button, ListGroup, Badge, Spinner } from "react-bootstrap";
-import "../styles/main.scss";
 
 export default function TasksScreen() {
   const { tasks, loading, addTask, updateTask, toggleDone, removeTask } = useTaskContext();
   const [newTitle, setNewTitle] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState("");
+  const [error, setError] = useState("");
 
   const handleAdd = async () => {
     if (!newTitle.trim()) return;
-    await addTask(newTitle.trim());
-    setNewTitle("");
+    try {
+      await addTask(newTitle.trim());
+      setNewTitle("");
+      setError("");
+    } catch (error) {
+      setError("Error adding task. Please try again.");
+    }
   };
 
   const handleEdit = (id: string, title: string) => {
@@ -23,9 +28,15 @@ export default function TasksScreen() {
 
   const handleSaveEdit = async (id: string) => {
     if (!editingTitle.trim()) return;
-    await updateTask(id, editingTitle.trim());
-    setEditingId(null);
-    setEditingTitle("");
+    try {
+      await updateTask(id, editingTitle.trim());
+      setError("");
+    } catch (error) {
+      setError("Error updating task. Please try again.");
+    } finally {
+      setEditingId(null);
+      setEditingTitle("");
+    }
   };
 
   return (
@@ -33,6 +44,8 @@ export default function TasksScreen() {
       <Navbar />
       <Container className="tasks-container">
         <h2 className="tasks-title">My Tasks</h2>
+
+        {error && <Alert variant="danger">{error}</Alert>}
 
         <div className="tasks-form">
           <Form.Control
@@ -73,7 +86,6 @@ export default function TasksScreen() {
                         onChange={() => toggleDone(task.id!, !task.done)}
                       />
                       <span className={task.done ? "task-done" : ""}>{task.title}</span>
-                      {task.done && <Badge bg="success">Done</Badge>}
                     </div>
                     <div className="task-actions">
                       <Button size="sm" variant="outline-secondary" onClick={() => handleEdit(task.id!, task.title)}>
