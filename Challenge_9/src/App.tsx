@@ -1,121 +1,67 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState } from "react";
+import { NaryTree, TreeNode } from "./structures/NaryTree";
+import Sidebar from "./components/Sidebar";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Products from "./pages/Products";
+import Services from "./pages/Services";
+import Blog from "./pages/Blog";
+import "./App.css";
+import type { ReactElement } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+// Build the N-ary tree with menus and submenus
+const tree = new NaryTree();
+
+const root = new TreeNode({ title: "Home", link: "/home", component: "Home" });
+
+const about = new TreeNode({ title: "About", link: "/about", component: "About" });
+const contact = new TreeNode({ title: "Contact", link: "/contact", component: "Contact" });
+
+const products = new TreeNode({ title: "Products", link: "/products", component: "Products" });
+const services = new TreeNode({ title: "Services", link: "/services", component: "Services" });
+const blog = new TreeNode({ title: "Blog", link: "/blog", component: "Blog" });
+
+// Add children to root
+root.addChild(about);
+root.addChild(products);
+root.addChild(blog);
+
+// Add submenus
+about.addChild(contact);
+products.addChild(services);
+
+tree.setRoot(root);
+
+// Print tree by console
+console.log("--- DFS ---");
+tree.dfs();
+console.log("--- BFS ---");
+tree.bfs();
+
+// Map links to components
+const pages: Record<string, ReactElement> = {
+  "/home": <Home />,
+  "/about": <About />,
+  "/contact": <Contact />,
+  "/products": <Products />,
+  "/services": <Services />,
+  "/blog": <Blog />,
+};
+
+export default function App() {
+  const [selected, setSelected] = useState("/home");
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    <div style={{ display: "flex" }}>
+      <Sidebar
+        tree={tree.root}
+        onSelect={setSelected}
+        selected={selected}
+      />
+      <div style={{ padding: "30px", flex: 1 }}>
+        {pages[selected]}
+      </div>
+    </div>
+  );
 }
-
-export default App
