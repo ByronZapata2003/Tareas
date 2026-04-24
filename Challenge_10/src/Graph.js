@@ -52,6 +52,10 @@ class Graph {
             .filter(n => n && n.type === "person");
     }
 
+    getCities() {
+      return this.nodes.filter(n => n.type === "city");
+    }
+
     printGraph() {
         this.nodes.forEach(node => {
             const label = node.type === "city"
@@ -86,55 +90,6 @@ class Graph {
         });
 
         return { nodes: graphNodes, links: graphLinks };
-    }
-
-searchNode(id) {
-  return this.nodes.find(n => n.id === id) || null;
-}
-
-getPeopleByCity(cityId) {
-  const cityEntry = this.searchNode(cityId);
-  if (!cityEntry || cityEntry.type !== "city") return [];
-
-  return this.adjacency[cityId]
-    .map(id => this.searchNode(id))
-    .filter(n => n && n.type === "person");
-}
-
-printGraph() {
-  this.nodes.forEach(node => {
-    const label = node.type === "city"
-      ? `[City] ${node.data.name}`
-      : `[Person] ${node.data.name} (${node.data.age}y) — City: ${node.data.city}`;
-    const neighbors = this.adjacency[node.id].map(id => {
-      const n = this.searchNode(id);
-      return n ? n.data.name : id;
-    });
-    console.log(`  ${label} → [${neighbors.join(", ")}]`);
-  });
-}
-
-toD3GraphData() {
-  const graphNodes = this.nodes.map(n => ({
-    id: String(n.id),
-    label: n.type === "city" ? n.data.name : `${n.data.name}\n${n.data.age}a`,
-    color: n.type === "city" ? "#5DCAA5" : "#AFA9EC",
-    size: n.type === "city" ? 500 : 300,
-  }));
-
-  const seen = new Set();
-  const graphLinks = [];
-  this.nodes.forEach(node => {
-    this.adjacency[node.id].forEach(neighborId => {
-      const key = [node.id, neighborId].sort().join("-");
-      if (!seen.has(key)) {
-        seen.add(key);
-        graphLinks.push({ source: String(node.id), target: String(neighborId) });
-      }
-    });
-  });
-  
-    return { nodes: graphNodes, links: graphLinks };
     }
 }
 
