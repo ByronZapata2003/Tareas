@@ -1,0 +1,532 @@
+// ============================================================
+//  styles.scss — Panel Visual de Rankings (Spotify Edu)
+//  Uso de: variables, mixins, nesting, extend, funciones
+// ============================================================
+
+// ── 1. Variables globales ─────────────────────────────────────
+$color-primary:    #1DB954;   // Verde Spotify
+$color-secondary:  #191414;   // Negro Spotify
+$color-accent:     #1ED760;
+$color-danger:     #E25D5D;
+$color-warning:    #F59E0B;
+$color-surface:    #212121;
+$color-surface-2:  #2A2A2A;
+$color-surface-3:  #333333;
+$color-text:       #FFFFFF;
+$color-text-muted: #B3B3B3;
+$color-border:     #3A3A3A;
+
+$font-family:   'Inter', 'Segoe UI', sans-serif;
+$font-size-xs:  0.75rem;
+$font-size-sm:  0.875rem;
+$font-size-md:  1rem;
+$font-size-lg:  1.25rem;
+$font-size-xl:  1.5rem;
+$font-size-2xl: 2rem;
+
+$border-radius-sm: 6px;
+$border-radius-md: 12px;
+$border-radius-lg: 20px;
+$border-radius-pill: 9999px;
+
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+$shadow-md: 0 4px 20px rgba(0, 0, 0, 0.5);
+$shadow-glow: 0 0 20px rgba(29, 185, 84, 0.35);
+
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+$transition-fast: 0.15s ease;
+$transition-normal: 0.25s ease;
+$transition-slow: 0.4s ease;
+
+// ── 2. Mixins reutilizables ───────────────────────────────────
+@mixin flex($dir: row, $justify: flex-start, $align: stretch, $gap: 0) {
+  display: flex;
+  flex-direction: $dir;
+  justify-content: $justify;
+  align-items: $align;
+  gap: $gap;
+}
+
+@mixin card($padding: $spacing-lg, $bg: $color-surface) {
+  background: $bg;
+  border: 1px solid $color-border;
+  border-radius: $border-radius-md;
+  padding: $padding;
+  box-shadow: $shadow-md;
+}
+
+@mixin hover-lift {
+  transition: transform $transition-normal, box-shadow $transition-normal;
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: $shadow-glow;
+  }
+}
+
+@mixin badge($bg, $text: #fff) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: $bg;
+  color: $text;
+  font-size: $font-size-xs;
+  font-weight: 700;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $border-radius-pill;
+}
+
+@mixin section-title {
+  font-size: $font-size-lg;
+  font-weight: 700;
+  color: $color-text;
+  margin: 0 0 $spacing-md 0;
+  @include flex(row, flex-start, center, $spacing-sm);
+
+  &::before {
+    content: '';
+    display: block;
+    width: 4px;
+    height: 1.2em;
+    background: $color-primary;
+    border-radius: 2px;
+  }
+}
+
+@mixin scrollbar-dark {
+  scrollbar-width: thin;
+  scrollbar-color: $color-surface-3 transparent;
+  &::-webkit-scrollbar { width: 6px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    background: $color-surface-3;
+    border-radius: 3px;
+  }
+}
+
+// ── 3. Reset y base ────────────────────────────────────────────
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: $font-family;
+  background: $color-secondary;
+  color: $color-text;
+  min-height: 100vh;
+  @include scrollbar-dark;
+}
+
+// ── 4. Layout principal ────────────────────────────────────────
+.app {
+  @include flex(column);
+  min-height: 100vh;
+}
+
+// ── 5. Header ─────────────────────────────────────────────────
+.header {
+  background: linear-gradient(135deg, $color-secondary 0%, #1a1a1a 100%);
+  border-bottom: 1px solid $color-border;
+  padding: $spacing-md $spacing-xl;
+  @include flex(row, space-between, center);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+
+  &__brand {
+    @include flex(row, flex-start, center, $spacing-md);
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: $color-primary;
+      border-radius: 50%;
+      @include flex(row, center, center);
+      font-size: $font-size-lg;
+      box-shadow: $shadow-glow;
+    }
+
+    h1 {
+      font-size: $font-size-xl;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+
+      span { color: $color-primary; }
+    }
+  }
+
+  &__subtitle {
+    font-size: $font-size-sm;
+    color: $color-text-muted;
+    font-weight: 400;
+  }
+}
+
+// ── 6. Contenido principal ─────────────────────────────────────
+.main {
+  padding: $spacing-xl;
+  @include flex(column, flex-start, stretch, $spacing-xl);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+// ── 7. Grid de paneles ─────────────────────────────────────────
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-lg;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dashboard-grid--full {
+  grid-column: 1 / -1;
+}
+
+// ── 8. Panel / Card ────────────────────────────────────────────
+.panel {
+  @include card;
+  @include hover-lift;
+  @include flex(column, flex-start, stretch, $spacing-md);
+
+  &__header {
+    @include flex(row, space-between, center);
+    padding-bottom: $spacing-md;
+    border-bottom: 1px solid $color-border;
+
+    h2 { @include section-title; }
+  }
+
+  &__badge {
+    @include badge($color-primary, $color-secondary);
+  }
+
+  &__badge--warning {
+    @include badge($color-warning, $color-secondary);
+  }
+
+  &__body {
+    @include flex(column, flex-start, stretch, $spacing-sm);
+    @include scrollbar-dark;
+    max-height: 350px;
+    overflow-y: auto;
+  }
+}
+
+// ── 9. Input de búsqueda ───────────────────────────────────────
+.search-box {
+  position: relative;
+
+  &__input {
+    width: 100%;
+    background: $color-surface-2;
+    border: 1.5px solid $color-border;
+    border-radius: $border-radius-md;
+    padding: $spacing-sm $spacing-md $spacing-sm ($spacing-xl + $spacing-sm);
+    color: $color-text;
+    font-family: $font-family;
+    font-size: $font-size-md;
+    transition: border-color $transition-fast, box-shadow $transition-fast;
+    outline: none;
+
+    &::placeholder { color: $color-text-muted; }
+
+    &:focus {
+      border-color: $color-primary;
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.15);
+    }
+  }
+
+  &__icon {
+    position: absolute;
+    left: $spacing-md;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $color-text-muted;
+    pointer-events: none;
+    font-size: $font-size-md;
+  }
+}
+
+// ── 10. Sugerencias del Trie ───────────────────────────────────
+.suggestions {
+  @include flex(column, flex-start, stretch, $spacing-xs);
+  margin-top: $spacing-xs;
+
+  &__item {
+    @include flex(row, space-between, center);
+    background: $color-surface-2;
+    border: 1px solid $color-border;
+    border-radius: $border-radius-sm;
+    padding: $spacing-sm $spacing-md;
+    cursor: pointer;
+    transition: background $transition-fast, border-color $transition-fast;
+    font-size: $font-size-sm;
+
+    &:hover {
+      background: $color-surface-3;
+      border-color: $color-primary;
+    }
+
+    &__label {
+      color: $color-text-muted;
+      font-size: $font-size-xs;
+      @include badge(rgba($color-primary, 0.15), $color-primary);
+    }
+  }
+
+  &__empty {
+    color: $color-text-muted;
+    font-size: $font-size-sm;
+    text-align: center;
+    padding: $spacing-md;
+    font-style: italic;
+  }
+}
+
+// ── 11. Ranking items (Heap) ───────────────────────────────────
+.ranking-list {
+  @include flex(column, flex-start, stretch, $spacing-sm);
+}
+
+.ranking-item {
+  @include flex(row, flex-start, center, $spacing-md);
+  background: $color-surface-2;
+  border: 1px solid $color-border;
+  border-radius: $border-radius-sm;
+  padding: $spacing-sm $spacing-md;
+  transition: background $transition-fast;
+
+  &:hover { background: $color-surface-3; }
+
+  &__position {
+    min-width: 28px;
+    height: 28px;
+    @include flex(row, center, center);
+    border-radius: 50%;
+    font-size: $font-size-xs;
+    font-weight: 800;
+    flex-shrink: 0;
+
+    &--gold   { background: #FFD700; color: #000; }
+    &--silver { background: #C0C0C0; color: #000; }
+    &--bronze { background: #CD7F32; color: #fff; }
+    &--normal { background: $color-surface-3; color: $color-text-muted; }
+  }
+
+  &__info {
+    @include flex(column, flex-start, flex-start, 2px);
+    flex: 1;
+    min-width: 0;
+
+    &-title {
+      font-size: $font-size-sm;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  &__plays {
+    @include flex(row, flex-end, center, $spacing-xs);
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+    flex-shrink: 0;
+
+    .play-icon { color: $color-primary; }
+  }
+
+  &__bar-wrap {
+    width: 100%;
+    background: $color-surface-3;
+    border-radius: $border-radius-pill;
+    height: 3px;
+    margin-top: 3px;
+  }
+
+  &__bar {
+    height: 100%;
+    background: linear-gradient(90deg, $color-primary, $color-accent);
+    border-radius: $border-radius-pill;
+    transition: width $transition-slow;
+  }
+}
+
+// ── 12. Grafo — Recomendaciones ────────────────────────────────
+.graph-panel {
+  &__result {
+    @include flex(column, flex-start, stretch, $spacing-sm);
+    margin-top: $spacing-sm;
+  }
+
+  &__selected {
+    @include flex(row, flex-start, center, $spacing-sm);
+    padding: $spacing-sm $spacing-md;
+    background: rgba($color-primary, 0.1);
+    border: 1px solid rgba($color-primary, 0.3);
+    border-radius: $border-radius-sm;
+    font-size: $font-size-sm;
+
+    .icon { color: $color-primary; }
+  }
+
+  &__recs {
+    @include flex(row, flex-start, flex-start);
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+  }
+
+  &__rec-tag {
+    @include badge(rgba($color-accent, 0.12), $color-accent);
+    border: 1px solid rgba($color-accent, 0.3);
+    font-size: $font-size-xs;
+    padding: $spacing-xs $spacing-md;
+    cursor: pointer;
+    transition: background $transition-fast;
+    font-weight: 500;
+
+    &:hover { background: rgba($color-accent, 0.25); }
+  }
+
+  &__edges {
+    @include flex(column, flex-start, stretch, $spacing-xs);
+    margin-top: $spacing-sm;
+  }
+
+  &__edge {
+    @include flex(row, flex-start, center, $spacing-sm);
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+    padding: $spacing-xs $spacing-sm;
+    background: $color-surface-2;
+    border-radius: $border-radius-sm;
+
+    .edge-dot { color: $color-primary; font-size: 8px; }
+  }
+}
+
+// ── 13. Botones ────────────────────────────────────────────────
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-xs;
+  border: none;
+  border-radius: $border-radius-sm;
+  padding: $spacing-sm $spacing-md;
+  font-family: $font-family;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $transition-fast;
+  outline: none;
+
+  &--primary {
+    background: $color-primary;
+    color: $color-secondary;
+    &:hover { background: $color-accent; transform: scale(1.02); }
+    &:active { transform: scale(0.98); }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: $color-text-muted;
+    border: 1px solid $color-border;
+    &:hover { border-color: $color-primary; color: $color-primary; }
+  }
+
+  &--sm { padding: $spacing-xs $spacing-sm; font-size: $font-size-xs; }
+}
+
+// ── 14. Stats cards ────────────────────────────────────────────
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-md;
+
+  @media (max-width: 600px) { grid-template-columns: 1fr; }
+}
+
+.stat-card {
+  @include card($spacing-md, $color-surface-2);
+  @include flex(column, flex-start, flex-start, $spacing-xs);
+  border-left: 3px solid $color-primary;
+
+  &__value {
+    font-size: $font-size-2xl;
+    font-weight: 800;
+    color: $color-primary;
+  }
+
+  &__label {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
+
+// ── 15. Toast / Notificación ───────────────────────────────────
+.toast {
+  position: fixed;
+  bottom: $spacing-xl;
+  right: $spacing-xl;
+  @include card($spacing-md, $color-surface-3);
+  border-left: 3px solid $color-primary;
+  font-size: $font-size-sm;
+  z-index: 200;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity $transition-normal, transform $transition-normal;
+  pointer-events: none;
+  min-width: 200px;
+
+  &--show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}
+
+// ── 16. Empty state ────────────────────────────────────────────
+.empty-state {
+  @include flex(column, center, center, $spacing-sm);
+  padding: $spacing-xl;
+  text-align: center;
+
+  &__icon { font-size: 2.5rem; opacity: 0.4; }
+  &__text { color: $color-text-muted; font-size: $font-size-sm; }
+}
+
+// ── 17. Footer ─────────────────────────────────────────────────
+.footer {
+  text-align: center;
+  padding: $spacing-lg;
+  border-top: 1px solid $color-border;
+  color: $color-text-muted;
+  font-size: $font-size-xs;
+  margin-top: auto;
+
+  span { color: $color-primary; }
+}
+
+// ── 18. Animaciones ────────────────────────────────────────────
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: $shadow-glow; }
+  50%       { box-shadow: 0 0 30px rgba(29, 185, 84, 0.6); }
+}
+
+.animate-in { animation: fadeIn 0.3s ease forwards; }
+.pulse      { animation: pulse 2s infinite; }

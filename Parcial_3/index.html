@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spotify Edu — Plataforma Musical</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* CSS compilado desde styles.scss */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}body{font-family:"Inter","Segoe UI",sans-serif;background:#191414;color:#fff;min-height:100vh;scrollbar-width:thin;scrollbar-color:#333 rgba(0,0,0,0)}body::-webkit-scrollbar{width:6px}body::-webkit-scrollbar-track{background:rgba(0,0,0,0)}body::-webkit-scrollbar-thumb{background:#333;border-radius:3px}.app{display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch;gap:0;min-height:100vh}.header{background:linear-gradient(135deg,#191414 0%,#1a1a1a 100%);border-bottom:1px solid #3a3a3a;padding:16px 32px;display:flex;flex-direction:row;justify-content:space-between;align-items:center;gap:0;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}.header__brand{display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:16px}.header__brand .logo-icon{width:40px;height:40px;background:#1db954;border-radius:50%;display:flex;flex-direction:row;justify-content:center;align-items:center;gap:0;font-size:1.25rem;box-shadow:0 0 20px rgba(29,185,84,.35)}.header__brand h1{font-size:1.5rem;font-weight:800;letter-spacing:-0.5px}.header__brand h1 span{color:#1db954}.header__subtitle{font-size:.875rem;color:#b3b3b3;font-weight:400}.main{padding:32px;display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch;gap:32px;max-width:1200px;margin:0 auto;width:100%}.dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}@media(max-width:768px){.dashboard-grid{grid-template-columns:1fr}}.dashboard-grid--full{grid-column:1/-1}.panel{background:#212121;border:1px solid #3a3a3a;border-radius:12px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,.5);transition:transform .25s ease,box-shadow .25s ease}.panel:hover{transform:translateY(-3px);box-shadow:0 0 20px rgba(29,185,84,.35)}.panel{display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch;gap:16px}.panel__header{display:flex;flex-direction:row;justify-content:space-between;align-items:center;gap:0;padding-bottom:16px;border-bottom:1px solid #3a3a3a}.panel__header h2{font-size:1.25rem;font-weight:700;color:#fff;margin:0;display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:8px}.panel__header h2::before{content:"";display:block;width:4px;height:1.2em;background:#1db954;border-radius:2px}.panel__badge{display:inline-flex;align-items:center;justify-content:center;background:#1db954;color:#191414;font-size:.75rem;font-weight:700;padding:4px 8px;border-radius:9999px}.panel__badge--warning{display:inline-flex;align-items:center;justify-content:center;background:#f59e0b;color:#191414;font-size:.75rem;font-weight:700;padding:4px 8px;border-radius:9999px}.panel__body{display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch;gap:8px;scrollbar-width:thin;scrollbar-color:#333 rgba(0,0,0,0)}.panel__body::-webkit-scrollbar{width:6px}.panel__body::-webkit-scrollbar-track{background:rgba(0,0,0,0)}.panel__body::-webkit-scrollbar-thumb{background:#333;border-radius:3px}.panel__body{max-height:350px;overflow-y:auto}.search-box{position:relative}.search-box__input{width:100%;background:#2a2a2a;border:1.5px solid #3a3a3a;border-radius:12px;padding:8px 16px 8px 40px;color:#fff;font-family:"Inter","Segoe UI",sans-serif;font-size:1rem;transition:border-color .15s ease,box-shadow .15s ease;outline:none}.search-box__input::placeholder{color:#b3b3b3}.search-box__input:focus{border-color:#1db954;box-shadow:0 0 0 3px rgba(29,185,84,.15)}.search-box__icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#b3b3b3;pointer-events:none;font-size:1rem}.suggestions{display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch;gap:4px;margin-top:4px}.suggestions__item{display:flex;flex-direction:row;justify-content:space-between;align-items:center;gap:0;background:#2a2a2a;border:1px solid #3a3a3a;border-radius:6px;padding:8px 16px;cursor:pointer;transition:background .15s ease,border-color .15s ease;font-size:.875rem}.suggestions__item:hover{background:#333;border-color:#1db954}.suggestions__item__label{color:#b3b3b3;font-size:.75rem;display:inline-flex;align-items:center;justify-content:center;background:rgba(29,185,84,.15);color:#1db954;font-size:.75rem;font-weight:700;padding:4px 8px;border-radius:9999px}.suggestions__empty{color:#b3b3b3;font-size:.875rem;text-align:center;padding:16px;font-style:italic}.ranking-list{display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch;gap:8px}.ranking-item{display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:16px;background:#2a2a2a;border:1px solid #3a3a3a;border-radius:6px;padding:8px 16px;transition:background .15s ease}.ranking-item:hover{background:#333}.ranking-item__position{min-width:28px;height:28px;display:flex;flex-direction:row;justify-content:center;align-items:center;gap:0;border-radius:50%;font-size:.75rem;font-weight:800;flex-shrink:0}.ranking-item__position--gold{background:gold;color:#000}.ranking-item__position--silver{background:silver;color:#000}.ranking-item__position--bronze{background:#cd7f32;color:#fff}.ranking-item__position--normal{background:#333;color:#b3b3b3}.ranking-item__info{display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-start;gap:2px;flex:1;min-width:0}.ranking-item__info-title{font-size:.875rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ranking-item__plays{display:flex;flex-direction:row;justify-content:flex-end;align-items:center;gap:4px;font-size:.75rem;color:#b3b3b3;flex-shrink:0}.ranking-item__plays .play-icon{color:#1db954}.ranking-item__bar-wrap{width:100%;background:#333;border-radius:9999px;height:3px;margin-top:3px}.ranking-item__bar{height:100%;background:linear-gradient(90deg,#1DB954,#1ED760);border-radius:9999px;transition:width .4s ease}.graph-panel__result{display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch;gap:8px;margin-top:8px}.graph-panel__selected{display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:8px;padding:8px 16px;background:rgba(29,185,84,.1);border:1px solid rgba(29,185,84,.3);border-radius:6px;font-size:.875rem}.graph-panel__selected .icon{color:#1db954}.graph-panel__recs{display:flex;flex-direction:row;justify-content:flex-start;align-items:flex-start;flex-wrap:wrap;gap:8px}.graph-panel__rec-tag{display:inline-flex;align-items:center;justify-content:center;background:rgba(30,215,96,.12);color:#1ed760;font-size:.75rem;font-weight:500;padding:4px 16px;border-radius:9999px;border:1px solid rgba(30,215,96,.3);cursor:pointer;transition:background .15s ease}.graph-panel__rec-tag:hover{background:rgba(30,215,96,.25)}.graph-panel__edges{display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch;gap:4px;margin-top:8px}.graph-panel__edge{display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:8px;font-size:.75rem;color:#b3b3b3;padding:4px 8px;background:#2a2a2a;border-radius:6px}.graph-panel__edge .edge-dot{color:#1db954;font-size:8px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:4px;border:none;border-radius:6px;padding:8px 16px;font-family:"Inter","Segoe UI",sans-serif;font-size:.875rem;font-weight:600;cursor:pointer;transition:all .15s ease;outline:none}.btn--primary{background:#1db954;color:#191414}.btn--primary:hover{background:#1ed760;transform:scale(1.02)}.btn--primary:active{transform:scale(.98)}.btn--ghost{background:transparent;color:#b3b3b3;border:1px solid #3a3a3a}.btn--ghost:hover{border-color:#1db954;color:#1db954}.btn--sm{padding:4px 8px;font-size:.75rem}.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}@media(max-width:600px){.stats-row{grid-template-columns:1fr}}.stat-card{background:#2a2a2a;border:1px solid #3a3a3a;border-radius:12px;padding:16px;box-shadow:0 4px 20px rgba(0,0,0,.5);display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-start;gap:4px;border-left:3px solid #1db954}.stat-card__value{font-size:2rem;font-weight:800;color:#1db954}.stat-card__label{font-size:.75rem;color:#b3b3b3;text-transform:uppercase;letter-spacing:.5px}.toast{position:fixed;bottom:32px;right:32px;background:#333;border:1px solid #3a3a3a;border-radius:12px;padding:16px;box-shadow:0 4px 20px rgba(0,0,0,.5);border-left:3px solid #1db954;font-size:.875rem;z-index:200;opacity:0;transform:translateY(10px);transition:opacity .25s ease,transform .25s ease;pointer-events:none;min-width:200px}.toast--show{opacity:1;transform:translateY(0);pointer-events:auto}.empty-state{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;padding:32px;text-align:center}.empty-state__icon{font-size:2.5rem;opacity:.4}.empty-state__text{color:#b3b3b3;font-size:.875rem}.footer{text-align:center;padding:24px;border-top:1px solid #3a3a3a;color:#b3b3b3;font-size:.75rem;margin-top:auto}.footer span{color:#1db954}@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}@keyframes pulse{0%,100%{box-shadow:0 0 20px rgba(29,185,84,.35)}50%{box-shadow:0 0 30px rgba(29,185,84,.6)}}.animate-in{animation:fadeIn .3s ease forwards}.pulse{animation:pulse 2s infinite}
+    /* Variables CSS para uso en app.js */
+    :root { --green: #1db954; --text-muted: #b3b3b3; }
+    /* Estilos extras para inputs del formulario de agregar */
+    .add-form { display: flex; gap: 8px; flex-wrap: wrap; }
+    .add-form input {
+      flex: 1; min-width: 140px;
+      background: #2a2a2a; border: 1.5px solid #3a3a3a;
+      border-radius: 8px; padding: 8px 12px;
+      color: #fff; font-family: inherit; font-size: 0.875rem; outline: none;
+    }
+    .add-form input:focus { border-color: #1db954; }
+    .add-form input::placeholder { color: #b3b3b3; }
+    .graph-select {
+      width: 100%; background: #2a2a2a; border: 1.5px solid #3a3a3a;
+      border-radius: 10px; padding: 8px 12px; color: #fff;
+      font-family: inherit; font-size: 0.875rem; outline: none; cursor: pointer;
+    }
+    .graph-select:focus { border-color: #1db954; }
+    .section-desc {
+      font-size: 0.78rem; color: #b3b3b3;
+      background: #2a2a2a; border-radius: 8px;
+      padding: 8px 12px; border-left: 3px solid #1db954;
+    }
+    .section-desc code {
+      background: rgba(29,185,84,.15); color: #1db954;
+      border-radius: 4px; padding: 1px 5px; font-size: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ── Header ─────────────────────────────────────────── -->
+  <header class="header">
+    <div class="header__brand">
+      <div class="logo-icon pulse">🎵</div>
+      <h1>Spotify <span>Edu</span></h1>
+    </div>
+    <span class="header__subtitle">Plataforma Musical — Estructuras de Datos Avanzadas</span>
+  </header>
+
+  <!-- ── Main ───────────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- Stats row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-card__value" id="stat-canciones">0</span>
+        <span class="stat-card__label">Canciones en Trie</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card__value" id="stat-conexiones">0</span>
+        <span class="stat-card__label">Aristas en Grafo</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card__value" id="stat-top">—</span>
+        <span class="stat-card__label">Ranking activo</span>
+      </div>
+    </div>
+
+    <!-- Dashboard: 2 columnas -->
+    <div class="dashboard-grid">
+
+      <!-- Panel 1 — Trie Buscador -->
+      <div class="panel">
+        <div class="panel__header">
+          <h2>🔍 Buscador Predictivo</h2>
+          <span class="panel__badge">Trie</span>
+        </div>
+        <p class="section-desc">
+          Estructura <code>Trie</code>. Escribe un prefijo para ver sugerencias en tiempo real.
+          Operaciones: <code>insertar()</code>, <code>buscar()</code>, <code>sugerencias()</code>
+        </p>
+        <div class="search-box">
+          <span class="search-box__icon">🔍</span>
+          <input
+            id="input-busqueda"
+            class="search-box__input"
+            type="text"
+            placeholder="Escribe el nombre de una canción..."
+            autocomplete="off"
+          />
+        </div>
+        <small id="busqueda-status" style="font-size:0.78rem; color:#b3b3b3; min-height:1em"></small>
+        <div id="sugerencias" class="suggestions"></div>
+      </div>
+
+      <!-- Panel 2 — Ranking Max Heap -->
+      <div class="panel">
+        <div class="panel__header">
+          <h2>Ranking Popular</h2>
+          <span class="panel__badge--warning">Max-Heap</span>
+        </div>
+        <p class="section-desc">
+          Estructura <code>MaxHeap</code>. Extrae automáticamente el Top-10 por reproducciones.
+          Operaciones: <code>insertar()</code>, <code>extraerMaximo()</code>, <code>obtenerTop()</code>
+        </p>
+        <div class="panel__body">
+          <div id="lista-ranking" class="ranking-list"></div>
+        </div>
+      </div>
+
+      <!-- Panel 3 — Grafo Recomendaciones -->
+      <div class="panel dashboard-grid--full">
+        <div class="panel__header">
+          <h2>🕸️ Recomendaciones por Grafo</h2>
+          <span class="panel__badge">Grafo No Dirigido</span>
+        </div>
+        <p class="section-desc">
+          Estructura <code>Graph</code> (lista de adyacencia). Selecciona una canción para ver canciones relacionadas usando
+          <code>BFS</code> con profundidad 2. Operaciones: <code>conectar()</code>, <code>recomendarBFS()</code>, <code>obtenerRelacionadas()</code>
+        </p>
+        <select id="select-grafo" class="graph-select">
+          <option value="">— Selecciona una canción —</option>
+        </select>
+        <div id="graph-resultado">
+          <div class="empty-state">
+            <div class="empty-state__icon">🎶</div>
+            <div class="empty-state__text">Selecciona una canción para ver recomendaciones</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 4 — Agregar canción -->
+      <div class="panel dashboard-grid--full">
+        <div class="panel__header">
+          <h2>➕ Agregar Canción al Sistema</h2>
+          <span class="panel__badge">Demo</span>
+        </div>
+        <p class="section-desc">
+          Agrega una nueva canción: se inserta en el <code>Trie</code>, en el <code>MaxHeap</code> y en el <code>Grafo</code>.
+        </p>
+        <div class="add-form">
+          <input id="nueva-cancion"  type="text"   placeholder="Título de la canción" />
+          <input id="nuevas-reps"    type="number" placeholder="Reproducciones (ej: 1500000)" min="0" />
+          <button id="btn-agregar" class="btn btn--primary">✚ Agregar</button>
+        </div>
+      </div>
+
+    </div><!-- /dashboard-grid -->
+  </main>
+
+  <footer class="footer">
+    Parcial 3 — Estructuras de Datos Avanzadas &nbsp;|&nbsp;
+    <span>Trie · Max-Heap · Grafo No Dirigido · Sass</span>
+    &nbsp;|&nbsp; Ingeniería Informática
+  </footer>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- Estructuras de datos (clases separadas) -->
+<script src="Trie.js"></script>
+<script src="MaxHeap.js"></script>
+<script src="Graph.js"></script>
+<!-- Lógica principal -->
+<script src="app.js"></script>
+</body>
+</html>
